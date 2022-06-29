@@ -1,34 +1,32 @@
 package librarysystem;
 
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collections;
 import java.util.List;
 
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import business.ControllerInterface;
 import business.SystemController;
-import dataaccess.User;
 
 
 public class LibrarySystem extends JFrame implements LibWindow {
+	public static final String ALL_BOOKS = "All Books";
+	public static final String CHECKOUT_BOOK = "Checkout Book";
+	public static final String CHECKOUT_MEMBER_RECORD = "Checkout Member Record";
 	ControllerInterface ci = new SystemController();
 	public final static LibrarySystem INSTANCE =new LibrarySystem();
 	JPanel mainPanel;
 	JMenuBar menuBar;
 	JMenu options;
-	JMenuItem login, allBookIds, allMemberIds;
+	JMenuItem logout;
 	String pathToImage;
 	private boolean isInitialized = false;
+	JSplitPane splitPane;
+	JList leftList;
+	JPanel cardLayout;
 
 	private static LibWindow[] allWindows = {
 			LibrarySystem.INSTANCE,
@@ -37,7 +35,8 @@ public class LibrarySystem extends JFrame implements LibWindow {
 			AllBookIdsWindow.INSTANCE
 	};
 
-	public static User loggedInUser;
+	private static Class[] librarianPages = {AllBookIdsWindow.class};
+	private static Class[] adminPages = {AllMemberIdsWindow.class};
 
 	public static void hideAllWindows() {
 
@@ -46,7 +45,6 @@ public class LibrarySystem extends JFrame implements LibWindow {
 
 		}
 	}
-
 
 	private LibrarySystem() {}
 
@@ -64,7 +62,34 @@ public class LibrarySystem extends JFrame implements LibWindow {
 	private void formatContentPane() {
 		mainPanel = new JPanel();
 		mainPanel.setLayout(new GridLayout(1,1));
-		getContentPane().add(mainPanel);
+		splitPane = new JSplitPane();
+		getContentPane().add(splitPane);
+
+		leftList = new JList();
+		leftList.setModel(new AbstractListModel() {
+			String[] values = new String[] {ALL_BOOKS, CHECKOUT_BOOK, CHECKOUT_MEMBER_RECORD};
+			public int getSize() {
+				return values.length;
+			}
+			public Object getElementAt(int index) {
+				return values[index];
+			}
+		});
+		leftList.setSelectedIndex(0);
+		splitPane.setLeftComponent(leftList);
+
+		cardLayout = new JPanel();
+		splitPane.setRightComponent(cardLayout);
+		cardLayout.setLayout(new CardLayout(0, 0));
+		cardLayout.add(AllBookIdsWindow.getInstance().getMainPanel(), ALL_BOOKS);
+		cardLayout.add(new CheckoutBookWindow().getMainPanel(), CHECKOUT_BOOK);
+		cardLayout.add(new CheckoutMemberRecordWindow().getMainPanel(), CHECKOUT_MEMBER_RECORD);
+
+		leftList.addListSelectionListener(e -> {
+			String value = leftList.getSelectedValue().toString();
+			CardLayout cl = (CardLayout) (cardLayout.getLayout());
+			cl.show(cardLayout, value);
+		});
 	}
 
 	private void setPathToImage() {
@@ -86,19 +111,9 @@ public class LibrarySystem extends JFrame implements LibWindow {
 	private void addMenuItems() {
 		options = new JMenu("Options");
 		menuBar.add(options);
-		allBookIds = new JMenuItem("All Book Ids");
-		allBookIds.addActionListener(new AllBookIdsListener());
-		allMemberIds = new JMenuItem("All Member Ids");
-		allMemberIds.addActionListener(new AllMemberIdsListener());
-		login = new JMenuItem("Login");
-		login.addActionListener(new LoginListener());
-
-		if(this.loggedInUser != null) {
-			options.add(allBookIds);
-			options.add(allMemberIds);
-		} else {
-			options.add(login);
-		}
+		logout = new JMenuItem("Logout");
+		logout.addActionListener(new LogoutListener());
+		options.add(logout);
 	}
 
 	public void showLogin() {
@@ -108,7 +123,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
 		LoginWindow.INSTANCE.setVisible(true);
 	}
 
-	class LoginListener implements ActionListener {
+	class LogoutListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -116,7 +131,6 @@ public class LibrarySystem extends JFrame implements LibWindow {
 			LoginWindow.INSTANCE.init();
 			Util.centerFrameOnDesktop(LoginWindow.INSTANCE);
 			LoginWindow.INSTANCE.setVisible(true);
-
 		}
 
 	}

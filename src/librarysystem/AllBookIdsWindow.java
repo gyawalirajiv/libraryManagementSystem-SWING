@@ -32,7 +32,16 @@ public class AllBookIdsWindow extends JFrame implements LibWindow {
 
 	//Singleton class
 	private AllBookIdsWindow() {}
-	
+
+	public static AllBookIdsWindow getInstance(){
+		INSTANCE.init();
+		return INSTANCE;
+	}
+
+	public JPanel getMainPanel(){
+		return mainPanel;
+	}
+
 	public void init() {
 		mainPanel = new JPanel();
 		mainPanel.setLayout(new BorderLayout());
@@ -43,7 +52,18 @@ public class AllBookIdsWindow extends JFrame implements LibWindow {
 		mainPanel.add(middlePanel, BorderLayout.CENTER);
 		mainPanel.add(lowerPanel, BorderLayout.SOUTH);
 		getContentPane().add(mainPanel);
+		listBookIDS();
 		isInitialized = true;
+	}
+
+	public void listBookIDS() {
+		List<String> ids = ci.allBookIds();
+		Collections.sort(ids);
+		StringBuilder sb = new StringBuilder();
+		for(String s: ids) {
+			sb.append(s).append("\n");
+		}
+		setData(sb.toString());
 	}
 	
 	public void defineTopPanel() {
@@ -70,7 +90,7 @@ public class AllBookIdsWindow extends JFrame implements LibWindow {
 		backToMainButn.addActionListener(new BackToMainListener());
 		lowerPanel = new JPanel();
 		lowerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));;
-		lowerPanel.add(backToMainButn);
+//		lowerPanel.add(backToMainButn);
 	}
 	
 	class BackToMainListener implements ActionListener {

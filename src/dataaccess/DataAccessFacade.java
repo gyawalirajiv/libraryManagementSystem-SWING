@@ -6,13 +6,10 @@ import java.io.Serializable;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.*;
 
-import business.Book;
-import business.BookCopy;
-import business.LibraryMember;
-import dataaccess.DataAccessFacade.StorageType;
+import business.*;
 
 
 public class DataAccessFacade implements DataAccess {
@@ -32,7 +29,17 @@ public class DataAccessFacade implements DataAccess {
 		mems.put(memberId, member);
 		saveToStorage(StorageType.MEMBERS, mems);	
 	}
-	
+
+	@Override
+	public void saveMemberMap(HashMap<String, LibraryMember> members) {
+		saveToStorage(StorageType.MEMBERS, members);
+	}
+
+	@Override
+	public void saveBookMap(HashMap<String, Book> books) {
+		saveToStorage(StorageType.BOOKS, books);
+	}
+
 	@SuppressWarnings("unchecked")
 	public  HashMap<String,Book> readBooksMap() {
 		//Returns a Map with name/value pairs being
@@ -143,6 +150,38 @@ public class DataAccessFacade implements DataAccess {
 			return "(" + first.toString() + ", " + second.toString() + ")";
 		}
 		private static final long serialVersionUID = 5399827794066637059L;
+	}
+
+	public static void checkOutBook(Book book, LibraryMember member) throws LibrarySystemException {
+		BookCopy[] copies = book.getCopies();
+		if (!book.isAvailable()) {
+			throw new LibrarySystemException("Book copies not available!");
+		}
+
+		if(member.getMemberCheckoutHistory() != null){
+			for ( MemberCheckoutHistoryItem item :member.getMemberCheckoutHistory().getMemberCheckoutHistoryItems() ) {
+				if(item.getBookCopy().getBook().getIsbn().equals(book.getIsbn())){
+					throw new LibrarySystemException("Member already has the same book!");
+				}
+			}
+		} else {
+			member.setMemberCheckoutHistory(new MemberCheckoutHistory(member));
+			member.getMemberCheckoutHistory().setMemberCheckoutHistoryItems(new ArrayList<>());
+		}
+
+		Optional<BookCopy> copy = Arrays.stream(copies).filter(BookCopy::isAvailable).
+				findAny();
+		if(copy.isPresent()) {
+			BookCopy anyCopy = copy.get();
+			MemberCheckoutHistory checkoutRecord = member.getMemberCheckoutHistory();
+			LocalDate checkoutDate = LocalDate.now();
+			LocalDate dueDate = checkoutDate.plusDays(book.getMaxCheckoutLength());
+			MemberCheckoutHistoryItem checkoutEntry = new MemberCheckoutHistoryItem(anyCopy, checkoutDate, dueDate);
+			anyCopy.setMemberCheckoutHistoryItem(checkoutEntry);
+			checkoutRecord.addMemberCheckoutHistoryItem(checkoutEntry);
+			anyCopy.changeAvailability();
+
+		}
 	}
 	
 }
