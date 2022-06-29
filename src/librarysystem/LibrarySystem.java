@@ -101,6 +101,13 @@ public class LibrarySystem extends JFrame implements LibWindow {
 		}
 	}
 
+	public void showLogin() {
+		LibrarySystem.hideAllWindows();
+		LoginWindow.INSTANCE.init();
+		Util.centerFrameOnDesktop(LoginWindow.INSTANCE);
+		LoginWindow.INSTANCE.setVisible(true);
+	}
+
 	class LoginListener implements ActionListener {
 
 		@Override

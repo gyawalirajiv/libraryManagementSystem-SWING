@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -17,8 +19,9 @@ import javax.swing.SwingConstants;
 import javax.swing.JOptionPane;
 
 import business.ControllerInterface;
-
+import business.LoginException;
 import business.SystemController;
+import dataaccess.User;
 
 
 public class LoginWindow extends JFrame implements LibWindow {
@@ -43,10 +46,9 @@ public class LoginWindow extends JFrame implements LibWindow {
 	private JLabel label;
 	private JButton loginButton;
 	private JButton logoutButton;
-	
-	
-	
-	
+
+	private ControllerInterface systemController = new SystemController();
+
 	public boolean isInitialized() {
 		return isInitialized;
 	}
@@ -108,7 +110,7 @@ public class LoginWindow extends JFrame implements LibWindow {
     		
     		JButton backButton = new JButton("<= Back to Main");
     		addBackButtonListener(backButton);
-    		lowerHalf.add(backButton);
+//    		lowerHalf.add(backButton);
     		
     	}
     	private void defineTopPanel() {
@@ -186,8 +188,17 @@ public class LoginWindow extends JFrame implements LibWindow {
     	
     	private void addLoginButtonListener(JButton butn) {
     		butn.addActionListener(evt -> {
-    			JOptionPane.showMessageDialog(this,"Successful Login");
-
+				try {
+					String pass = password.getText();
+					systemController.login(username.getText(), pass);
+				} catch (LoginException e) {
+					JOptionPane.showMessageDialog(this,"Invalid Username or Password!");
+					System.out.println(e.getMessage());
+					return;
+				}
+				JOptionPane.showMessageDialog(this,"Successful Login");
+				LibrarySystem.hideAllWindows();
+				LibrarySystem.INSTANCE.setVisible(true);
     		});
     	}
 	
