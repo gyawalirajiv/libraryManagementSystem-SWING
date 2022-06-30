@@ -76,7 +76,7 @@ public class CheckOverDueBookCopyWindow extends JFrame {
                 JOptionPane.showMessageDialog(mainPanel, "ISBN cannot be empty");
             } else {
                 try {
-                    List<String[]> records = ci.getOverdueBookCopiesOfMember(isbn);
+                    List<String[]> records = ci.getOverdueBookCopiesByISBN(isbn);
                     System.out.println(records);
                     if (records.size() == 0) {
                         if(tableDataSet){
@@ -95,13 +95,7 @@ public class CheckOverDueBookCopyWindow extends JFrame {
                             };
                             tableModel.addColumn("Member Id");
                             tableModel.addColumn("Full name");
-                            tableModel.addColumn("Book ISBN");
-                            tableModel.addColumn("Book Title");
-                            tableModel.addColumn("Copy Number");
-                            tableModel.addColumn("Checkout Date");
-                            tableModel.addColumn("Due Date");
-
-
+                            tableModel.addColumn("Phone Number");
 
                             table = new JTable(tableModel);
 
