@@ -14,4 +14,5 @@ public interface ControllerInterface {
 	public void addBookCopy(String bookID) throws LibrarySystemException;
 	public void addNewMember(String id, String firstName, String lastName, String cell, String street, String city, String state, String zip) throws LibrarySystemException;
 	public Auth getRole();
+	public List<String[]> getOverdueBookCopiesOfMember(String isbn) throws LibrarySystemException;
 }
