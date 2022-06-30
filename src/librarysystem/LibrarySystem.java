@@ -146,11 +146,10 @@ public class LibrarySystem extends JFrame implements LibWindow {
 	}
 
 	class LogoutListener implements ActionListener {
-
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			LibrarySystem.hideAllWindows();
-			LoginWindow.INSTANCE.init();
+//			LoginWindow.INSTANCE.init();
 			Util.centerFrameOnDesktop(LoginWindow.INSTANCE);
 			LoginWindow.INSTANCE.setVisible(true);
 		}
