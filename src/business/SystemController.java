@@ -1,9 +1,8 @@
 package business;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.*;
 
 import dataaccess.Auth;
 import dataaccess.DataAccess;
@@ -89,33 +88,39 @@ public class SystemController implements ControllerInterface {
 	}
 
 	@Override
-	public List<String[]> getOverdueBookCopiesOfMember(String isbn) throws LibrarySystemException {
+	public List<String[]> getOverdueBookCopiesByISBN(String isbn) throws LibrarySystemException {
 		DataAccess da = new DataAccessFacade();
-		LibraryMember m = da.readMemberMap().get(isbn);
-		if(m == null){
-			throw new LibrarySystemException("No such User!");
+
+		Book book = da.readBooksMap().get(isbn);
+		if(book == null){
+			throw new LibrarySystemException("No Book Found!");
 		}
 
-		if(m.getMemberCheckoutHistory() == null){
-			m.setMemberCheckoutHistory(new MemberCheckoutHistory(m));
-			m.getMemberCheckoutHistory().setMemberCheckoutHistoryItems(new ArrayList<>());
+		List<LibraryMember> filteredMembers = new ArrayList<>();
+		for(Map.Entry<String, LibraryMember> e: da.readMemberMap().entrySet()){
+			LibraryMember member = e.getValue();
+
+			MemberCheckoutHistory memberCheckoutHistory = member.getMemberCheckoutHistory();
+			if(memberCheckoutHistory == null) continue;
+			for(MemberCheckoutHistoryItem item: memberCheckoutHistory.getMemberCheckoutHistoryItems()){
+				if(item.getBookCopy().getBook().getIsbn().equals(isbn)
+						&& item.getCheckoutDate().plusDays(item.getBookCopy().getBook()
+						   .getMaxCheckoutLength()).isBefore(LocalDate.now()))
+					filteredMembers.add(member);
+			}
 		}
-		MemberCheckoutHistory memberCheckoutHistory = m.getMemberCheckoutHistory();
-		List<MemberCheckoutHistoryItem> memberCheckoutHistoryItems = memberCheckoutHistory.getMemberCheckoutHistoryItems();
+
 		List<String[]> columns = new ArrayList<>();
 		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-		for (MemberCheckoutHistoryItem his: memberCheckoutHistoryItems){
+		for(LibraryMember m: filteredMembers){
 			String[] row = new String[]{
-					isbn,
+					m.getMemberId(),
 					m.getFirstName() + " " + m.getLastName(),
-					his.getBookCopy().getBook().getIsbn(),
-					his.getBookCopy().getBook().getTitle(),
-					his.getBookCopy().getCopyNum()+"",
-					his.getCheckoutDate().toString(),
-					his.getDueDate().toString()
+					m.getTelephone()
 			};
 			columns.add(row);
 		}
+
 		return columns;
 	}
 

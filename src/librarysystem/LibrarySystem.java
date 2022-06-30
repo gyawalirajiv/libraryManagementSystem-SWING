@@ -20,6 +20,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
 	public static final String ADD_BOOK = "Add Book";
 	public static final String ADD_BOOK_COPY = "Add Book's Copy";
 	public static final String ADD_NEW_MEMBER = "Add New Member";
+	public static final String CHECK_OVERDUE_BOOK_COPY = "Check Overdue Book Copy";
 	ControllerInterface ci = new SystemController();
 	public static LibrarySystem INSTANCE =new LibrarySystem();
 	JPanel mainPanel;
@@ -81,11 +82,11 @@ public class LibrarySystem extends JFrame implements LibWindow {
 
 		String[] values;
 		if(ci.getRole() == Auth.LIBRARIAN)
-			values = new String[] {ALL_BOOKS, CHECKOUT_BOOK, CHECKOUT_MEMBER_RECORD};
+			values = new String[] {ALL_BOOKS, CHECKOUT_BOOK, CHECKOUT_MEMBER_RECORD, CHECK_OVERDUE_BOOK_COPY};
 		else if(ci.getRole() == Auth.ADMIN)
-			values = new String[] {ALL_BOOKS, ADD_BOOK, ADD_BOOK_COPY, ADD_NEW_MEMBER};
+			values = new String[] {ALL_BOOKS, ADD_BOOK, ADD_BOOK_COPY, ADD_NEW_MEMBER, CHECK_OVERDUE_BOOK_COPY};
 		else
-			values = new String[] {ALL_BOOKS, CHECKOUT_BOOK, CHECKOUT_MEMBER_RECORD, ADD_BOOK, ADD_BOOK_COPY, ADD_NEW_MEMBER};
+			values = new String[] {ALL_BOOKS, CHECKOUT_BOOK, CHECKOUT_MEMBER_RECORD, ADD_BOOK, ADD_BOOK_COPY, ADD_NEW_MEMBER, CHECK_OVERDUE_BOOK_COPY};
 		leftList.setModel(new AbstractListModel() {
 			public int getSize() {
 				return values.length;
@@ -106,6 +107,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
 		cardLayout.add(new AddBookWindow().getMainPanel(), ADD_BOOK);
 		cardLayout.add(new AddBookCopyWindow().getMainPanel(), ADD_BOOK_COPY);
 		cardLayout.add(new AddNewMemberWindow().getMainPanel(), ADD_NEW_MEMBER);
+		cardLayout.add(new CheckOverDueBookCopyWindow().getMainPanel(), CHECK_OVERDUE_BOOK_COPY);
 
 		leftList.addListSelectionListener(e -> {
 			String value = leftList.getSelectedValue().toString();
