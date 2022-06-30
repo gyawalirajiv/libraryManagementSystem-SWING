@@ -112,4 +112,14 @@ public class SystemController implements ControllerInterface {
 		da.saveBookMap(books);
 	}
 
+	@Override
+	public void addNewMember(String memberID, String firstName, String lastName, String cell, String street, String city, String state, String zip) throws LibrarySystemException {
+		DataAccess da = new DataAccessFacade();
+		LibraryMember member = da.readMemberMap().get(memberID);
+		if(member != null){
+			throw new LibrarySystemException("There already is a member with the same ID!");
+		}
+		member = new LibraryMember(memberID, firstName, lastName, cell, new Address(street, city, state, zip));
+		da.saveNewMember(member);
+	}
 }
