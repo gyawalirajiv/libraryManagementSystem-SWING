@@ -21,6 +21,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
 	public static final String ADD_BOOK_COPY = "Add Book's Copy";
 	public static final String ADD_NEW_MEMBER = "Add New Member";
 	public static final String CHECK_OVERDUE_BOOK_COPY = "Check Overdue Book Copy";
+	public static final String DASHBOARD = "Dashboard";
 	ControllerInterface ci = new SystemController();
 	public static LibrarySystem INSTANCE =new LibrarySystem();
 	JPanel mainPanel;
@@ -60,7 +61,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
 
 		createMenus();
 		//pack();
-		setSize(660,500);
+		setSize(900,500);
 		isInitialized = true;
 	}
 
@@ -82,11 +83,11 @@ public class LibrarySystem extends JFrame implements LibWindow {
 
 		String[] values;
 		if(ci.getRole() == Auth.LIBRARIAN)
-			values = new String[] {ALL_BOOKS, CHECKOUT_BOOK, CHECKOUT_MEMBER_RECORD, CHECK_OVERDUE_BOOK_COPY};
+			values = new String[] {DASHBOARD, ALL_BOOKS, CHECKOUT_BOOK, CHECKOUT_MEMBER_RECORD, CHECK_OVERDUE_BOOK_COPY};
 		else if(ci.getRole() == Auth.ADMIN)
-			values = new String[] {ALL_BOOKS, ADD_BOOK, ADD_BOOK_COPY, ADD_NEW_MEMBER, CHECK_OVERDUE_BOOK_COPY};
+			values = new String[] {DASHBOARD, ALL_BOOKS, ADD_BOOK, ADD_BOOK_COPY, ADD_NEW_MEMBER, CHECK_OVERDUE_BOOK_COPY};
 		else
-			values = new String[] {ALL_BOOKS, CHECKOUT_BOOK, CHECKOUT_MEMBER_RECORD, ADD_BOOK, ADD_BOOK_COPY, ADD_NEW_MEMBER, CHECK_OVERDUE_BOOK_COPY};
+			values = new String[] {ALL_BOOKS, CHECKOUT_BOOK, CHECKOUT_MEMBER_RECORD, ADD_BOOK, ADD_BOOK_COPY, ADD_NEW_MEMBER, CHECK_OVERDUE_BOOK_COPY, DASHBOARD};
 		leftList.setModel(new AbstractListModel() {
 			public int getSize() {
 				return values.length;
@@ -101,6 +102,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
 		cardLayout = new JPanel();
 		splitPane.setRightComponent(cardLayout);
 		cardLayout.setLayout(new CardLayout(0, 0));
+		cardLayout.add(new DashboardWindow().getMainPanel(), DASHBOARD);
 		cardLayout.add(AllBookIdsWindow.getInstance().getMainPanel(), ALL_BOOKS);
 		cardLayout.add(new CheckoutBookWindow().getMainPanel(), CHECKOUT_BOOK);
 		cardLayout.add(new CheckoutMemberRecordWindow().getMainPanel(), CHECKOUT_MEMBER_RECORD);

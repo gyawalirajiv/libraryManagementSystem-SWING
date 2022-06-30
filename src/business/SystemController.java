@@ -105,7 +105,7 @@ public class SystemController implements ControllerInterface {
 			for(MemberCheckoutHistoryItem item: memberCheckoutHistory.getMemberCheckoutHistoryItems()){
 				if(item.getBookCopy().getBook().getIsbn().equals(isbn)
 						&& item.getCheckoutDate().plusDays(item.getBookCopy().getBook()
-						   .getMaxCheckoutLength()).isBefore(LocalDate.now()))
+						   .getMaxCheckoutLength() + 100).isBefore(LocalDate.now()))
 					filteredMembers.add(member);
 			}
 		}

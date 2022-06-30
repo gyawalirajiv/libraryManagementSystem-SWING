@@ -4,8 +4,7 @@ import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
 
-import javax.swing.JFrame;
-
+import javax.swing.*;
 
 
 public class Main {
@@ -14,6 +13,7 @@ public class Main {
 		EventQueue.invokeLater(() ->
 		{
 			LibrarySystem.INSTANCE.setTitle("4 Idiots Library Management");
+			LoginWindow.INSTANCE.setTitle("4 Idiots Library Management");
 			LibrarySystem.INSTANCE.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 			LibrarySystem.INSTANCE.init();
