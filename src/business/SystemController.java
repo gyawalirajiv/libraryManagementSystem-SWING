@@ -88,4 +88,28 @@ public class SystemController implements ControllerInterface {
 		return columns;
 	}
 
+	@Override
+	public void addBook(String isbn, String title, int maxCheckoutLength, List<Author> authors) throws LibrarySystemException {
+		DataAccess da = new DataAccessFacade();
+		HashMap<String, Book> books = da.readBooksMap();
+		Book b = books.get(isbn);
+		if(b != null){
+			throw new LibrarySystemException("Already a Book with same ISBN!");
+		}
+		b = new Book(isbn, title, maxCheckoutLength, authors);
+		da.saveNewBook(b);
+	}
+
+	@Override
+	public void addBookCopy(String isbn) throws LibrarySystemException {
+		DataAccess da = new DataAccessFacade();
+		HashMap<String, Book> books = da.readBooksMap();
+		Book b = books.get(isbn);
+		if(b == null){
+			throw new LibrarySystemException("There is no such book with the ISBN!");
+		}
+		b.addCopy();
+		da.saveBookMap(books);
+	}
+
 }
