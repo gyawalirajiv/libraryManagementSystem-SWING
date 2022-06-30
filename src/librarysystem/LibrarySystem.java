@@ -17,6 +17,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
 	public static final String CHECKOUT_BOOK = "Checkout Book";
 	public static final String CHECKOUT_MEMBER_RECORD = "Checkout Member Record";
 	public static final String ADD_BOOK = "Add Book";
+	public static final String ADD_BOOK_COPY = "Add Book's Copy";
 	ControllerInterface ci = new SystemController();
 	public final static LibrarySystem INSTANCE =new LibrarySystem();
 	JPanel mainPanel;
@@ -68,7 +69,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
 
 		leftList = new JList();
 		leftList.setModel(new AbstractListModel() {
-			String[] values = new String[] {ALL_BOOKS, CHECKOUT_BOOK, CHECKOUT_MEMBER_RECORD, ADD_BOOK};
+			String[] values = new String[] {ALL_BOOKS, CHECKOUT_BOOK, CHECKOUT_MEMBER_RECORD, ADD_BOOK, ADD_BOOK_COPY};
 			public int getSize() {
 				return values.length;
 			}
@@ -86,6 +87,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
 		cardLayout.add(new CheckoutBookWindow().getMainPanel(), CHECKOUT_BOOK);
 		cardLayout.add(new CheckoutMemberRecordWindow().getMainPanel(), CHECKOUT_MEMBER_RECORD);
 		cardLayout.add(new AddBookWindow().getMainPanel(), ADD_BOOK);
+		cardLayout.add(new AddBookCopyWindow().getMainPanel(), ADD_BOOK_COPY);
 
 		leftList.addListSelectionListener(e -> {
 			String value = leftList.getSelectedValue().toString();
