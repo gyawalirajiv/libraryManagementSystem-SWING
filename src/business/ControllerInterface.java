@@ -1,5 +1,7 @@
 package business;
 
+import dataaccess.Auth;
+
 import java.util.List;
 
 public interface ControllerInterface {
@@ -11,4 +13,5 @@ public interface ControllerInterface {
 	public void addBook(String isbn, String title, int parseInt, List<Author> authors) throws LibrarySystemException;
 	public void addBookCopy(String bookID) throws LibrarySystemException;
 	public void addNewMember(String id, String firstName, String lastName, String cell, String street, String city, String state, String zip) throws LibrarySystemException;
+	public Auth getRole();
 }

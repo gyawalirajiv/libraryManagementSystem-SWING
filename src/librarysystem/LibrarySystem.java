@@ -10,6 +10,7 @@ import javax.swing.*;
 
 import business.ControllerInterface;
 import business.SystemController;
+import dataaccess.Auth;
 
 
 public class LibrarySystem extends JFrame implements LibWindow {
@@ -69,8 +70,16 @@ public class LibrarySystem extends JFrame implements LibWindow {
 		getContentPane().add(splitPane);
 
 		leftList = new JList();
+
+		String[] values;
+		if(ci.getRole() == Auth.LIBRARIAN)
+			values = new String[] {ALL_BOOKS, CHECKOUT_BOOK, CHECKOUT_MEMBER_RECORD};
+		else if(ci.getRole() == Auth.ADMIN)
+			values = new String[] {ALL_BOOKS, ADD_BOOK, ADD_BOOK_COPY, ADD_NEW_MEMBER};
+		else
+			values = new String[] {ALL_BOOKS, CHECKOUT_BOOK, CHECKOUT_MEMBER_RECORD, ADD_BOOK, ADD_BOOK_COPY, ADD_NEW_MEMBER};
+
 		leftList.setModel(new AbstractListModel() {
-			String[] values = new String[] {ALL_BOOKS, CHECKOUT_BOOK, CHECKOUT_MEMBER_RECORD, ADD_BOOK, ADD_BOOK_COPY, ADD_NEW_MEMBER};
 			public int getSize() {
 				return values.length;
 			}
@@ -207,4 +216,9 @@ public class LibrarySystem extends JFrame implements LibWindow {
 
 	}
 
+	@Override
+	public void setVisible(boolean b) {
+		this.formatContentPane();
+		super.setVisible(b);
+	}
 }

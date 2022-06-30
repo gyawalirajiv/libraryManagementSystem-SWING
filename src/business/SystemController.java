@@ -122,4 +122,9 @@ public class SystemController implements ControllerInterface {
 		member = new LibraryMember(memberID, firstName, lastName, cell, new Address(street, city, state, zip));
 		da.saveNewMember(member);
 	}
+
+	@Override
+	public Auth getRole() {
+		return currentAuth;
+	}
 }
