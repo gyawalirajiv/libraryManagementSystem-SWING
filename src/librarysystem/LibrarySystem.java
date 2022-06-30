@@ -21,7 +21,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
 	public static final String ADD_BOOK_COPY = "Add Book's Copy";
 	public static final String ADD_NEW_MEMBER = "Add New Member";
 	ControllerInterface ci = new SystemController();
-	public final static LibrarySystem INSTANCE =new LibrarySystem();
+	public static LibrarySystem INSTANCE =new LibrarySystem();
 	JPanel mainPanel;
 	JMenuBar menuBar;
 	JMenu options;
@@ -66,9 +66,17 @@ public class LibrarySystem extends JFrame implements LibWindow {
 	private void formatContentPane() {
 		mainPanel = new JPanel();
 		mainPanel.setLayout(new GridLayout(1,1));
+		createSplitPane();
+	}
+
+	private void createSplitPane() {
 		splitPane = new JSplitPane();
 		getContentPane().add(splitPane);
 
+		createLeftSplitPane();
+	}
+
+	private void createLeftSplitPane() {
 		leftList = new JList();
 
 		String[] values;
@@ -78,7 +86,6 @@ public class LibrarySystem extends JFrame implements LibWindow {
 			values = new String[] {ALL_BOOKS, ADD_BOOK, ADD_BOOK_COPY, ADD_NEW_MEMBER};
 		else
 			values = new String[] {ALL_BOOKS, CHECKOUT_BOOK, CHECKOUT_MEMBER_RECORD, ADD_BOOK, ADD_BOOK_COPY, ADD_NEW_MEMBER};
-
 		leftList.setModel(new AbstractListModel() {
 			public int getSize() {
 				return values.length;
@@ -218,7 +225,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
 
 	@Override
 	public void setVisible(boolean b) {
-		this.formatContentPane();
+		this.createLeftSplitPane();
 		super.setVisible(b);
 	}
 }

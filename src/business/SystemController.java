@@ -89,6 +89,37 @@ public class SystemController implements ControllerInterface {
 	}
 
 	@Override
+	public List<String[]> getOverdueBookCopiesOfMember(String isbn) throws LibrarySystemException {
+		DataAccess da = new DataAccessFacade();
+		LibraryMember m = da.readMemberMap().get(isbn);
+		if(m == null){
+			throw new LibrarySystemException("No such User!");
+		}
+
+		if(m.getMemberCheckoutHistory() == null){
+			m.setMemberCheckoutHistory(new MemberCheckoutHistory(m));
+			m.getMemberCheckoutHistory().setMemberCheckoutHistoryItems(new ArrayList<>());
+		}
+		MemberCheckoutHistory memberCheckoutHistory = m.getMemberCheckoutHistory();
+		List<MemberCheckoutHistoryItem> memberCheckoutHistoryItems = memberCheckoutHistory.getMemberCheckoutHistoryItems();
+		List<String[]> columns = new ArrayList<>();
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+		for (MemberCheckoutHistoryItem his: memberCheckoutHistoryItems){
+			String[] row = new String[]{
+					isbn,
+					m.getFirstName() + " " + m.getLastName(),
+					his.getBookCopy().getBook().getIsbn(),
+					his.getBookCopy().getBook().getTitle(),
+					his.getBookCopy().getCopyNum()+"",
+					his.getCheckoutDate().toString(),
+					his.getDueDate().toString()
+			};
+			columns.add(row);
+		}
+		return columns;
+	}
+
+	@Override
 	public void addBook(String isbn, String title, int maxCheckoutLength, List<Author> authors) throws LibrarySystemException {
 		DataAccess da = new DataAccessFacade();
 		HashMap<String, Book> books = da.readBooksMap();
