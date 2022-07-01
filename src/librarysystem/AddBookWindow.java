@@ -144,7 +144,7 @@ public class AddBookWindow extends JFrame{
                     authPhoneNumberField.setText("");
                     maxCheckoutLength.setText("");
                     JOptionPane.showMessageDialog(mainPanel, "Saved...");
-                } catch (LibrarySystemException e) {
+                } catch (LibrarySystemException | NumberFormatException e) {
                     JOptionPane.showMessageDialog(mainPanel, e.getMessage());
                 }
             }

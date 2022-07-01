@@ -126,7 +126,7 @@ public class CheckOverDueBookCopyWindow extends JFrame {
                             }
                             table.setModel(tableModel);
                         }
-                        JOptionPane.showMessageDialog(mainPanel, "Checkout records were found successfully");
+                        JOptionPane.showMessageDialog(mainPanel, "Overdue records were found successfully");
                         table.setVisible(true);
                         mainPanel.revalidate();
                         mainPanel.repaint();

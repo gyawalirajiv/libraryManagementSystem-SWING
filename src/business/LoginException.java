@@ -13,6 +13,6 @@ public class LoginException extends Exception implements Serializable {
 	public LoginException(Throwable t) {
 		super(t);
 	}
-	private static final long serialVersionUID = 8978723266036027364L;
+	private static final long serialVersionUID = 465461341684654L;
 	
 }
