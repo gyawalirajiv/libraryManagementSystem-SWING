@@ -87,7 +87,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
 		else if(ci.getRole() == Auth.ADMIN)
 			values = new String[] {DASHBOARD, ALL_BOOKS, ADD_BOOK, ADD_BOOK_COPY, ADD_NEW_MEMBER, CHECK_OVERDUE_BOOK_COPY};
 		else
-			values = new String[] {ALL_BOOKS, CHECKOUT_BOOK, CHECKOUT_MEMBER_RECORD, ADD_BOOK, ADD_BOOK_COPY, ADD_NEW_MEMBER, CHECK_OVERDUE_BOOK_COPY, DASHBOARD};
+			values = new String[] {DASHBOARD, ALL_BOOKS, CHECKOUT_BOOK, CHECKOUT_MEMBER_RECORD, ADD_BOOK, ADD_BOOK_COPY, ADD_NEW_MEMBER, CHECK_OVERDUE_BOOK_COPY};
 		leftList.setModel(new AbstractListModel() {
 			public int getSize() {
 				return values.length;
